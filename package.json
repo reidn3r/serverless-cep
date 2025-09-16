@@ -1,0 +1,23 @@
+{
+  "name": "serverless",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev:ibge": "cd ./functions/serverlessIbge && npx serverless offline --config ./serverless.yml",
+    "dev:cep": "cd ./functions/serverlessViaCep && npx serverless offline --config ./serverless.yml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^4.19.2",
+    "redis": "^5.8.2",
+    "serverless": "^4.19.0",
+    "serverless-http": "^4.0.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^14.4.0"
+  }
+}
