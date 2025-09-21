@@ -79,7 +79,7 @@ A arquitetura é complementada por **Redis** para cache de respostas e pelo **Lo
 ```
 VIACEP_API=https://viacep.com.br/ws
 IBGE_API=https://servicodados.ibge.gov.br/api/v1
-MODE=development
+MODE=#deploy ou development
 REDIS_HOST=redis://redis:6379
 ```
 
