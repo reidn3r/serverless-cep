@@ -10,6 +10,42 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
+  
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:4510-4559:4510-4559" # Portas para outros serviços
+    environment:
+      - SERVICES=lambda,apigateway,cloudformation,cloudwatch,logs,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=local
+    volumes:
+      - ./localstack:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  
+  aws-cli:
+    image: amazon/aws-cli
+    depends_on:
+      - localstack
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        aws --endpoint-url=http://localstack:4566 apigateway create-rest-api --name 'main-gateway'
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://localstack-deploy-bucket
+      "
+    
 volumes:
   redis_data:

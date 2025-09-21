@@ -10,23 +10,33 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-localstack
 
 custom:
   serverless-offline:
     httpPort: 8080
     lambdaPort: 5002
-
+  
+  localstack:
+    stages:
+      - local
+    host: http://localhost
+    edgePort: 4566 #PORTA LOCALSTACK
+    autostart: true
+    lambda:
+      mountCode: true
+  
 functions:
   ibge:
     handler: functions/serverlessIbge/handler.handler
     events:
-      - httpApi:
+      - http:
           path: /ibge/{cidade}/{uf}
           method: get
 
   viaCep:
     handler: functions/serverlessViaCep/handler.handler
     events:
-      - httpApi:
+      - http:
           path: /cep/{cep}
           method: get
