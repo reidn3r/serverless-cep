@@ -1,28 +1,36 @@
-# 🌐 Serverless Framework
+# 🌐 Serverless Framework 
 
 ## 📋 Descrição do Projeto
 
-Implementação de API Gateway utilizando **Serverless Framework** para orquestração de duas funções Lambda para consulta de dados externos
+Implementação de arquitetura **Serverless** utilizando o **Serverless Framework** para orquestração de funções **AWS Lambda**, expostas via **API Gateway**.
 
-- **🌍 API IBGE**: Consulta dados de municípios da API do IBGE
-- **📮 API ViaCEP**: Consulta informações de endereços a partir de CEPs
+A arquitetura é complementada por **Redis** para cache de respostas e pelo **LocalStack**, que provê a simulação local dos serviços AWS.
+
+* **📊 API IBGE**: Consulta dados de municípios brasileiros via API pública do IBGE
+* **📮 API ViaCEP**: Consulta endereços a partir de CEPs via API pública do ViaCEP
+
+
+## ☁️ Serviços AWS LocalStack
+* **Amazon API Gateway** → Gerencia a exposição de endpoints REST
+* **AWS Lambda (Node.js)** → Executa a lógica de integração com serviços externos
+* **Amazon CloudWatch** → Registro e monitoramento de logs de execução
 
 ## 🏗️ Arquitetura
 
 ![Diagrama de Arquitetura](/assets/localstack.excalidraw.png)
-*Diagrama da arquitetura serverless com API Gateway, Lambda Functions, Redis, Docker e LocalStack*
+*Arquitetura serverless com API Gateway, Lambda Functions, Redis, Docker e LocalStack*
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Serverless Framework**: Framework para deploy e gestão de funções serverless
-- **LocalStack**: Simulação local dos serviços AWS
-- **Redis**: Cache em memória para otimização de performance
-- **Docker**: Containerização do ambiente
+* **Serverless Framework** → Gerenciamento de funções e recursos
+* **LocalStack** → Simulação de serviços AWS
+* **Redis** → Cache de dados em memória
+* **Docker** → Orquestração de containers
+
 
 ## 🚀 Execução
 
 ### Deploy AWS LocalStack
-
 1. **Iniciar LocalStack e Redis:**
    ```bash
    docker-compose up -d
@@ -38,49 +46,53 @@ Implementação de API Gateway utilizando **Serverless Framework** para orquestr
    npx serverless deploy --stage local
    ```
 
-### Execução Local
-1. **Iniciar Redis:**
+### Execução Local (Serverless Offline)
+
+1. **Iniciar Redis**
+
    ```bash
    docker-compose up redis -d
    ```
 
-2. **Instalar dependências:**
+2. **Instalar dependências**
+
    ```bash
    npm install
    ```
 
-3. **Execução local do API Gateway e Funções Lambda:**
+3. **Executar localmente o API Gateway e as Lambdas**
+
    ```bash
    npm run dev:gateway
    ```
 
+## 📡 LocalStack: Endpoints Disponíveis
 
-### LocalStack: Endpoints Disponíveis
+* **GET** `http://localhost:4566/restapis/{api_gateway_id}/local/_user_request_/ibge/{cidade}/{uf}`
+* **GET** `http://localhost:4566/restapis/{api_gateway_id}/local/_user_request_/cep/{cep}`
 
-- **GET** `http://localhost:4566/restapis/{api_gateway_id}/local/_user_request_/ibge/{cidade}/{uf}`
-- **GET** `http://localhost:4566/restapis/{api_gateway_id}/local/_user_request_/cep/{cep}`
 
 ## ⚙️ Configuração
 
-### Variáveis de Ambiente
-
-As funções esperam as variáveis de ambiente declaradas no arquivo `.env.example`:
+### Variáveis de Ambiente: Disponíveis em (`.env.example`)
 
 ```
-VIACEP_API=
-IBGE_API=
-MODE=
-REDIS_HOST=
+VIACEP_API=https://viacep.com.br/ws
+IBGE_API=https://servicodados.ibge.gov.br/api/v1
+MODE=development
+REDIS_HOST=redis://redis:6379
 ```
 
 ## 🎯 Funcionalidades
 
 ### API IBGE
-- Consulta dados de municípios brasileiros
-- Cache de resultados em Redis
-- Parâmetros: `{cidade}` e `{uf}`
+
+* Consulta dados de municípios brasileiros
+* Implementa cache em Redis
+* Parâmetros: `{cidade}`, `{uf}`
 
 ### API ViaCEP
-- Consulta endereços por CEP
-- Cache de resultados em Redis
-- Parâmetro: `{cep}`
+
+* Consulta endereços por CEP
+* Implementa cache em Redis
+* Parâmetro: `{cep}`
