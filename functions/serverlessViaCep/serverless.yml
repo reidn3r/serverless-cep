@@ -1,21 +1,24 @@
-org: reidn3r
-app: serverless-learning
 service: serverlessViaCep
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  profile: default
+
+custom:
+  serverless-offline:
+    httpPort: 3031
+    lambdaPort: 5001
 
 functions:
   api:
     handler: handler.handler
     events:
-      - httpApi: "*"
-
-package:
-  individually: true
-  excludeDevDependencies: true
+      - http:
+          path: cep/{cep}
+          method: get
 
 plugins:
   - serverless-offline
-  

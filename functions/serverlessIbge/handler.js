@@ -13,7 +13,7 @@ app.get("/health", (req, res, next) => {
   });
 });
 
-app.get("/cep/:cidade/:uf", async (req, res, next) => {
+app.get("/ibge/:cidade/:uf", async (req, res, next) => {
   const city = req.params.cidade;
   const uf = req.params.uf;
 

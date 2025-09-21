@@ -1,0 +1,32 @@
+service: api-gateway
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: dev
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 8080
+    lambdaPort: 5002
+
+functions:
+  ibge:
+    handler: functions/serverlessIbge/handler.handler
+    events:
+      - httpApi:
+          path: /ibge/{cidade}/{uf}
+          method: get
+
+  viaCep:
+    handler: functions/serverlessViaCep/handler.handler
+    events:
+      - httpApi:
+          path: /cep/{cep}
+          method: get
